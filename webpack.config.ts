@@ -9,8 +9,12 @@ import packageJson from './package.json';
 import { getBuildTimeConstantsPlugins } from './scripts/build-constants';
 import { Configuration, WebpackPluginInstance } from 'webpack';
 
-const config: (env: any) => Configuration = (env) => {
-  const IS_PRODUCTION = env.production === true;
+interface Env {
+  production?: boolean;
+}
+
+const config: (env: Env) => Configuration = (env) => {
+  const IS_PRODUCTION = env?.production === true;
 
   return {
     mode: IS_PRODUCTION ? 'production' : 'development',
@@ -19,6 +23,7 @@ const config: (env: any) => Configuration = (env) => {
 
     entry: {
       app: ['src/index.tsx'],
+      background: ['src/background/index.ts'],
     },
 
     output: {
@@ -96,11 +101,13 @@ const config: (env: any) => Configuration = (env) => {
             {
               from: 'manifest.json',
               to: '',
+              /* eslint-disable */
               transform: (content: any) => {
                 const manifest = JSON.parse(content.toString());
                 manifest.version = packageJson.version;
                 return JSON.stringify(manifest, null, 2);
               },
+              /* eslint-enable */
             },
           ].concat(
             (() => {

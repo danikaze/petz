@@ -7,7 +7,7 @@
     "dev": "webpack --config webpack.config.ts --mode development",
     "build": "scripts/build.sh",
     "test": "npm run lint",
-    "lint": "eslint",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "prettier": "prettier --write '**/*.{ts,tsx}'",
     "prepare": "husky install"
   },
@@ -43,6 +43,8 @@
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "@types/webpack": "^5.28.0",
+    "@typescript-eslint/eslint-plugin": "^5.38.0",
+    "@typescript-eslint/parser": "^5.38.0",
     "babel-loader": "^8.2.3",
     "babel-plugin-import": "^1.13.3",
     "clean-webpack-plugin": "^4.0.0",
