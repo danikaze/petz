@@ -1,4 +1,5 @@
 module.exports = {
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: 'module',
@@ -6,13 +7,14 @@ module.exports = {
     tsconfigRootDir: __dirname,
     createDefaultProgram: true,
   },
-  plugins: ['unicorn'],
+  plugins: ['unicorn', '@typescript-eslint', 'eslint-plugin-import'],
+
   settings: {
     'import/resolver': {
       // See https://github.com/benmosher/eslint-plugin-import/issues/1396#issuecomment-575727774 for line below
       node: {},
       webpack: {
-        config: require.resolve('./.erb/configs/webpack.config.eslint.ts'),
+        config: require.resolve('./webpack.config.ts'),
       },
       typescript: {},
     },
@@ -24,12 +26,11 @@ module.exports = {
     // A temporary hack related to IDE not resolving correct package.json
     'import/no-extraneous-dependencies': 'off',
     'import/no-unresolved': 'error',
-    // Since React 17 and typescript 4.1 you can safely disable the rule
-    'react/react-in-jsx-scope': 'off',
 
     /*
      * Custom CSS rules :)
      */
+    'no-console': 'error',
 
     // https://reactjs.org/docs/hooks-rules.html
     // allows placing the hooks logic in a different file for better code management
@@ -99,6 +100,21 @@ module.exports = {
       {
         selector: 'default',
         format: ['camelCase'],
+      },
+      // disable checks on certain literals
+      {
+        selector: 'default',
+        format: null,
+        filter: {
+          regex: '^(__dirname)|(__filename)$',
+          match: true,
+        },
+      },
+      // global variables or constants
+      {
+        selector: 'default',
+        modifiers: ['global'],
+        format: ['UPPER_CASE', 'camelCase'],
       },
       // destructured variables come from other places so no format is enforced
       {

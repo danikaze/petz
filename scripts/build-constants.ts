@@ -9,8 +9,8 @@ import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import getGitData from './git';
 import packageJson from '../package.json';
 
-export function getBuildTimeConstantsPlugins(IS_PRODUCTION: boolean) {
-  const constants = getConstants(IS_PRODUCTION);
+export function getBuildTimeConstantsPlugins(isProduction: boolean) {
+  const constants = getConstants(isProduction);
 
   const plugins = [new DefinePlugin(constants)] as WebpackPluginInstance[];
 
@@ -24,7 +24,7 @@ export function getBuildTimeConstantsPlugins(IS_PRODUCTION: boolean) {
   return plugins;
 }
 
-function getConstants(IS_PRODUCTION: boolean) {
+function getConstants(isProduction: boolean) {
   const constants = readdirSync(join(__dirname, '..', 'build-time-constants'))
     .filter((file) => /\.js$/.test(file))
     .reduce((res, filePath) => {
@@ -41,7 +41,7 @@ function getConstants(IS_PRODUCTION: boolean) {
 
   return stringify({
     ...constants,
-    IS_PRODUCTION,
+    IS_PRODUCTION: isProduction,
     PACKAGE_NAME: packageJson.name,
     PACKAGE_VERSION: packageJson.version,
     COMMIT_HASH: gitData.rev,

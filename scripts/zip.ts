@@ -12,6 +12,4 @@ const currentFile = process.argv.findIndex((arg) => arg.endsWith(__filename));
 const targetFile = normalize(process.argv[currentFile + 1]);
 const folder = normalize(process.argv[currentFile + 2]);
 
-(async function () {
-  await zip(folder, targetFile);
-})();
+await zip(folder, targetFile);
