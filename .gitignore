@@ -3,6 +3,7 @@ build-time-constants/*secret.js
 
 .DS_Store
 
+design
 release/app
 release/dist
 .erb/dll
