@@ -27,5 +27,8 @@
       "resources": ["img/*"],
       "matches": ["https://*/*", "http://*/*"]
     }
-  ]
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
 }
