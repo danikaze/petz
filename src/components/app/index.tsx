@@ -1,10 +1,13 @@
 import { FunctionComponent, useEffect } from 'react';
+import { singleIpc } from '@utils/ipc';
 import { HelloWorld, HellowWorldProps } from '@components/hello-world';
-import { singleIpc } from '@src/utils/ipc';
+import { useSettings } from '@components/settings';
 
 export type AppProps = HellowWorldProps;
 
 export const App: FunctionComponent<AppProps> = ({ saluteWho }) => {
+  const settings = useSettings();
+
   useEffect(() => {
     const isPopup = !location.hash.includes('external');
     if (!isPopup) return;
@@ -14,6 +17,10 @@ export const App: FunctionComponent<AppProps> = ({ saluteWho }) => {
   async function openNewWindow() {
     await singleIpc.sendMessage('openExternalWindow');
     window.close();
+  }
+
+  if (!settings) {
+    return <div>Loading...</div>;
   }
 
   return (
