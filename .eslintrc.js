@@ -123,10 +123,11 @@ module.exports = {
         format: null,
       },
       // Constants can also be camelCase apart from UPPER_CASE
+      // Can be assigned to React components (PascalCase)
       {
         selector: 'variable',
         modifiers: ['const'],
-        format: ['UPPER_CASE', 'camelCase'],
+        format: ['UPPER_CASE', 'camelCase', 'PascalCase'],
       },
       // functions defined as constants should have the same format as functions
       {
