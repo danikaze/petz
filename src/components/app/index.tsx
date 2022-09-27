@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect } from 'react';
+import { FunctionComponent, useEffect } from 'react';
 import { HelloWorld, HellowWorldProps } from '@components/hello-world';
 import { singleIpc } from '@src/utils/ipc';
 

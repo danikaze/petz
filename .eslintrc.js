@@ -32,6 +32,11 @@ module.exports = {
      */
     'no-console': 'error',
 
+    // https://reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html
+    'react/jsx-uses-react': 'off',
+    // https://reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html
+    'react/react-in-jsx-scope': 'off',
+
     // https://reactjs.org/docs/hooks-rules.html
     // allows placing the hooks logic in a different file for better code management
     'react-hooks/rules-of-hooks': 'off',
