@@ -102,13 +102,11 @@ const config: (env: Env) => Configuration = (env) => {
             {
               from: 'manifest.json',
               to: '',
-              /* eslint-disable */
-              transform: (content: any) => {
+              transform: (content: Buffer) => {
                 const manifest = JSON.parse(content.toString());
                 manifest.version = packageJson.version;
                 return JSON.stringify(manifest, null, 2);
               },
-              /* eslint-enable */
             },
           ].concat(
             (() => {
