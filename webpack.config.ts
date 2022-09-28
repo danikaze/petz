@@ -22,8 +22,9 @@ const config: (env: Env) => Configuration = (env) => {
     devtool: IS_PRODUCTION ? undefined : 'inline-source-map',
 
     entry: {
-      app: ['src/index.tsx'],
       background: ['src/background/index.ts'],
+      app: ['src/app.tsx'],
+      options: ['src/options.tsx'],
     },
 
     output: {

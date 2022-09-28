@@ -17,7 +17,7 @@
   "action": {
     "default_title": "",
     "default_icon": "icons/icon128.png",
-    "default_popup": "static/index.html"
+    "default_popup": "static/app.html"
   },
 
   "permissions": ["storage"],
@@ -30,6 +30,12 @@
       "matches": ["https://*/*", "http://*/*"]
     }
   ],
+
+  "options_ui": {
+    "page": "static/options.html",
+    "open_in_tab": true
+  },
+
   "background": {
     "service_worker": "background.js"
   }
