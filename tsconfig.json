@@ -16,6 +16,10 @@
     "paths": {
       "@components": ["src/components"],
       "@components/*": ["src/components/*"],
+      "@game": ["src/game"],
+      "@game/*": ["src/game/*"],
+      "@game-assets": ["src/game-assets"],
+      "@game-assets/*": ["src/game-assets/*"],
       "@img": ["src/img"],
       "@img/*": ["src/img/*"],
       "@src": ["src"],

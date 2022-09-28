@@ -63,12 +63,25 @@ const config: (env: Env) => Configuration = (env) => {
         // images & fonts (assets)
         {
           test: /\.(png|jpg|gif|jpeg|svg|woff|woff2|ttf|eot|ico)$/,
+          exclude: /game-assets/,
           use: {
             loader: 'file-loader',
             options: {
               name: '[name]-[contenthash:8].[ext]',
               outputPath: 'assets',
               publicPath: './assets',
+            },
+          },
+        },
+        // put the game assets in its own folder ^^
+        {
+          test: /game-assets/,
+          use: {
+            loader: 'file-loader',
+            options: {
+              name: '[name]-[contenthash:8].[ext]',
+              outputPath: 'game-assets',
+              publicPath: './game-assets',
             },
           },
         },
