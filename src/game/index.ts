@@ -1,15 +1,11 @@
 import Phaser from 'phaser';
 
-import sky from '@game-assets/sky.png';
-import ground from '@game-assets/platform.png';
-import star from '@game-assets/star.png';
-import dude from '@game-assets/dude.png';
+import bg from '@game-assets/bg.png';
+import pet from '@game-assets/pet.png';
 
 export interface MainGameOptions {
   parent: HTMLElement;
 }
-
-let player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 
 export class MainGame {
   public game!: Phaser.Game;
@@ -23,87 +19,70 @@ export class MainGame {
     const config: Phaser.Types.Core.GameConfig = {
       parent: this.parent,
       type: Phaser.AUTO,
-      width: 300,
-      height: 300,
-      physics: {
-        default: 'arcade',
-        arcade: {
-          gravity: { y: 300 },
-          debug: false,
-        },
-      },
-      scene: {
-        preload: MainGame.preload,
-        create: MainGame.create,
-        update: MainGame.update,
-      },
+      width: this.parent.clientWidth,
+      height: this.parent.clientHeight,
+      scene: [getBackgroundScene(this.parent), getPetScene(this.parent)],
     };
 
     this.game = new Phaser.Game(config);
   }
+}
 
-  private static preload(this: Phaser.Scene) {
-    this.load.image('sky', chrome.runtime.getURL(sky));
-    this.load.image('ground', chrome.runtime.getURL(ground));
-    this.load.image('star', chrome.runtime.getURL(star));
-    this.load.spritesheet('dude', chrome.runtime.getURL(dude), {
-      frameWidth: 32,
-      frameHeight: 48,
-    });
-  }
+function getBackgroundScene(parent: HTMLElement) {
+  let bgImage;
+  return {
+    key: 'scene-bg',
+    active: true,
 
-  private static create(this: Phaser.Scene) {
-    this.add.image(150, 150, 'sky');
-    this.add.image(50, 50, 'star');
-    this.add.image(100, 50, 'star');
+    preload(this: Phaser.Scene) {
+      this.load.image('bg', chrome.runtime.getURL(bg));
+    },
 
-    const platforms = this.physics.add.staticGroup();
-    platforms.create(50, 100, 'ground');
-    platforms.create(250, 200, 'ground');
-    platforms.create(200, 310, 'ground').setScale(2).refreshBody();
+    create(this: Phaser.Scene) {
+      bgImage = this.add.image(0, 0, 'bg');
+      this.cameras.main.startFollow(bgImage);
+    },
 
-    player = this.physics.add.sprite(30, 200, 'dude');
-    player.setBounce(0.2);
-    player.setCollideWorldBounds(true);
+    update(this: Phaser.Scene) {
+      // manual control of bg scaling to cover the canvas
+      const bgWidth = 2296;
+      const bgHeight = 2532;
 
-    this.anims.create({
-      key: 'left',
-      frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
-      frameRate: 10,
-      repeat: -1,
-    });
+      const { clientWidth, clientHeight } = parent;
 
-    this.anims.create({
-      key: 'turn',
-      frames: [{ key: 'dude', frame: 4 }],
-      frameRate: 20,
-    });
+      // max -> cover
+      const zoom = Math.max(clientWidth / bgWidth, clientHeight / bgHeight);
+      this.cameras.main.setZoom(zoom);
+    },
+  };
+}
 
-    this.anims.create({
-      key: 'right',
-      frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
-      frameRate: 10,
-      repeat: -1,
-    });
+function getPetScene(parent: HTMLElement) {
+  return {
+    key: 'scene-pet',
+    active: true,
+    pack: {
+      files: [{ type: 'image', key: 'pet', url: chrome.runtime.getURL(pet) }],
+    },
 
-    this.physics.add.collider(player, platforms);
-  }
+    create(this: Phaser.Scene) {
+      const pet = this.add.image(0, 0, 'pet');
 
-  private static update(this: Phaser.Scene) {
-    const cursors = this.input.keyboard.createCursorKeys();
-    if (cursors.left.isDown) {
-      player.setVelocityX(-160);
-      player.anims.play('left');
-    } else if (cursors.right.isDown) {
-      player.setVelocityX(160);
-      player.anims.play('right');
-    } else {
-      player.setVelocityX(0);
-      player.anims.play('turn');
-    }
+      const mainCamera = this.cameras.main;
+      mainCamera.startFollow(pet);
+    },
 
-    if (cursors.up.isDown && player.body.touching.down) {
-      player.setVelocityY(-250);
-    }
-  }
+    update(this: Phaser.Scene) {
+      // manual control of the pet resize
+      const petWidth = 1013; // margin included in the image
+      const petHeight = 1101; // sizes of the image
+
+      // button/info zone should be substracted from the clientHeight
+      const { clientWidth, clientHeight } = parent;
+
+      // min -> fit
+      const zoom = Math.min(clientWidth / petWidth, clientHeight / petHeight);
+      this.cameras.main.setZoom(zoom);
+    },
+  };
 }
