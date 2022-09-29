@@ -1,7 +1,5 @@
 import Phaser from 'phaser';
-
-import bg from '@game-assets/bg.png';
-import pet from '@game-assets/pet.png';
+import { assets } from './assets';
 
 export interface MainGameOptions {
   parent: HTMLElement;
@@ -33,13 +31,12 @@ function getBackgroundScene(parent: HTMLElement) {
   return {
     key: 'scene-bg',
     active: true,
-
-    preload(this: Phaser.Scene) {
-      this.load.image('bg', chrome.runtime.getURL(bg));
+    pack: {
+      files: [assets.bg],
     },
 
     create(this: Phaser.Scene) {
-      bgImage = this.add.image(0, 0, 'bg');
+      bgImage = this.add.image(0, 0, assets.bg.key);
       this.cameras.main.startFollow(bgImage);
     },
 
@@ -62,11 +59,11 @@ function getPetScene(parent: HTMLElement) {
     key: 'scene-pet',
     active: true,
     pack: {
-      files: [{ type: 'image', key: 'pet', url: chrome.runtime.getURL(pet) }],
+      files: [assets.pet],
     },
 
     create(this: Phaser.Scene) {
-      const pet = this.add.image(0, 0, 'pet');
+      const pet = this.add.image(0, 0, assets.pet.key);
 
       const mainCamera = this.cameras.main;
       mainCamera.startFollow(pet);
