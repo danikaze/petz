@@ -1,22 +1,44 @@
-import { assets } from '@game/assets';
+import { Pet } from '@game/pet';
 import { GameScene, GameSceneConfig } from '.';
 
 export type PetSceneConfig = Pick<GameSceneConfig, 'active' | 'parent'>;
 
 export class PetScene extends GameScene {
+  private pet!: Pet;
+
   constructor(config: PetSceneConfig) {
     super({
       key: 'PetScene',
       ...config,
-      pack: {
-        files: [assets.pet],
-      },
+    });
+
+    this.pet = new Pet(this, {
+      name: 'Baby',
+      atlas: 'baby',
     });
   }
 
+  preload() {
+    this.pet.preload();
+  }
+
   create() {
-    const pet = this.add.image(0, 0, assets.pet.key);
-    this.cameras.main.startFollow(pet);
+    this.pet.create();
+    this.pet.playAnimation('idle');
+    this.cameras.main.startFollow(this.pet.sprite!);
+
+    const cycleAnim = () => {
+      const current = Pet.animations.indexOf(this.pet.getAnimation());
+      const next = Pet.animations[(current + 1) % Pet.animations.length];
+      this.pet.playAnimation(next);
+    };
+
+    const hatchEgg = () => {
+      document.removeEventListener('click', hatchEgg);
+      document.addEventListener('click', cycleAnim);
+    };
+
+    document.addEventListener('click', hatchEgg);
   }
 
   update() {
