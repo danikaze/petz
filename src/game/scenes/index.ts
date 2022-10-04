@@ -6,7 +6,8 @@ export interface GameSceneConfig extends Phaser.Types.Scenes.SettingsConfig {
 }
 
 export interface GameScenePreloadAssets {
-  images: AssetKey<'image'>[];
+  images?: AssetKey<'image'>[];
+  atlas?: AssetKey<'atlas'>[];
 }
 
 export abstract class GameScene extends Phaser.Scene {
@@ -20,10 +21,19 @@ export abstract class GameScene extends Phaser.Scene {
     this.parent = parent;
   }
 
-  protected preloadAssets(toLoad: GameScenePreloadAssets): void {
-    for (const key of toLoad.images) {
-      const asset = assets[key];
-      this.load.image(asset.key, asset.url);
+  public preloadAssets(toLoad: GameScenePreloadAssets): void {
+    if (toLoad.images) {
+      for (const key of toLoad.images) {
+        const asset = assets[key];
+        this.load.image(asset.key, asset.url);
+      }
+    }
+
+    if (toLoad.atlas) {
+      for (const key of toLoad.atlas) {
+        const asset = assets[key];
+        this.load.atlas(asset.key, asset.url, asset.json);
+      }
     }
   }
 }
